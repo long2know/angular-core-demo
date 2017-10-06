@@ -1,0 +1,9 @@
+<div>
+  <ul class="pagination">
+    <li *ngIf="boundaryLinks" class="page-item" [ngClass]="{'disabled': noPrevious()}"><a class="page-link" (click)="selectPage(1)">{{getText('first')}}</a></li>
+    <li *ngIf="directionLinks" class="page-item" [ngClass]="{'disabled': noPrevious()}"><a class="page-link" (click)="selectPage(options.config.pageNumber - 1)">{{getText('previous')}}</a></li>
+    <li *ngFor="let page of pages" class="page-item" [ngClass]="{'active': page.active}"><a class="page-link" (click)="selectPage(page.number)">{{page.text}}</a></li>
+    <li *ngIf="directionLinks" class="page-item" [ngClass]="{'disabled': noNext()}"><a class="page-link" (click)="selectPage(options.config.pageNumber + 1)">{{getText('next')}}</a></li>
+    <li *ngIf="boundaryLinks" class="page-item" [ngClass]="{'disabled': noNext()}"><a class="page-link" (click)="selectPage(options.config.totalPages)">{{getText('last')}}</a></li>
+  </ul>
+</div>

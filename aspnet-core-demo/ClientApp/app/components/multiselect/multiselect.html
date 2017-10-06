@@ -1,0 +1,20 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-secondary dropdown-toggle" (click)="toggleSelect()">
+    <span class="pull-left" [innerHtml]="localHeader"></span>
+    <span class="caret pull-right"></span>
+  </button>
+  <ul class="dropdown-menu multi-select-popup" [ngStyle]="{display:isOpen ? 'block' : 'none'}" style="display:block;">
+    <li *ngIf="enableFilter" class="filter-container">
+      <div class="form-group has-feedback filter">
+        <input class="form-control" type="text" [value]="filterText" [placeholder]="filterPlaceholder" [formControl]="filterInput" />
+        <span class="clear-filter fa fa-times-circle-o form-control-feedback" (click)="clearFilter()"></span>
+      </div>
+    </li>
+    <li *ngFor="let item of _items | filter:{label:filterText}">
+      <a (click)="select(item)" class="dropdown-item">
+        <i class="fa fa-fw" [ngClass]="{'fa-check': item.checked, 'glyphicon-none': !item.checked}"></i>
+        <span [innerHtml]="item.label"></span>
+      </a>
+    </li>
+  </ul>
+</div>

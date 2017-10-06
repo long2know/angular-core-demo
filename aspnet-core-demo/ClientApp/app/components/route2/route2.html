@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row">
+    <strong class="float-left">Tristate Checkbox</strong>
+    <label class="float-right">
+      <input type="checkbox" name="hasChanges" [(ngModel)]="hasChanges">
+      Has Changes
+    </label>
+  </div>
+  <hr>
+  <table>
+    <thead>
+      <tr>
+        <th class="header-check">
+          <tri-state-checkbox class="toggle-all" [items]="items"></tri-state-checkbox>
+        </th>
+        <th>Id</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of _items">
+        <td class="td-checkbox"><input type="checkbox" name="ch" [(ngModel)]="item.isSelected"></td>
+        <td class="td-checkbox" [innerHtml]="item.id"></td>
+        <td class="td-checkbox" [innerHtml]="item.label"></td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <!--  <button type="button" class="btn btn-default" (click)="makeCall()">Make API Call</button> -->
+  <button type="button" class="btn btn-default" (click)="checkAll()">Check All</button>
+  <button type="button" class="btn btn-default" (click)="uncheckAll()">Clear All</button>
+</div>
