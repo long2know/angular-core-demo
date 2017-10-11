@@ -9,6 +9,7 @@ import { Tristate } from './components/tristate/tristate.component';
 import { CustomTable, CustomTableOptions, CustomTableConfig, CustomTableColumnDefinition } from './components/customTable/customTable.component';
 import { Filter, CustomFilterPipe } from './components/filter/filter.component';
 import { EqualPipe } from './pipes/equal-pipe';
+import { GroupByPipe } from './pipes/group-by.pipe';
 import { Pager } from './components/pager/pager.component';
 import { AppComponent } from './components/app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,7 +33,7 @@ import 'bootstrap';
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, JsonpModule, HttpModule, NgbModule.forRoot(), AppRoutingModule],
-    declarations: [AppComponent, Route1Component, Route2Component, Route3Component, Route4Component, DialogComponent, Multiselect, Tristate, CustomTable, Pager, Filter, CustomFilterPipe, FilterPipe, EqualPipe],
+    declarations: [AppComponent, Route1Component, Route2Component, Route3Component, Route4Component, DialogComponent, Multiselect, Tristate, CustomTable, Pager, Filter, CustomFilterPipe, FilterPipe, EqualPipe, GroupByPipe ],
     providers: [
         EqualPipe,
         { provide: APP_BASE_HREF, useValue: document.location.pathname },
@@ -40,9 +41,7 @@ import 'bootstrap';
         { provide: ErrorHandler, useClass: AppErrorHandler },
         {
             provide: Http,
-            useFactory: (backend: XHRBackend, options: RequestOptions, spinSvc: SpinService) => {
-                return new HttpService(backend, options, spinSvc);
-            },
+            useFactory: httpFactory,
             deps: [XHRBackend, RequestOptions, SpinService]
         },
         NavigationService, DialogService, ApiService, DataService, LoremIpsumService, SpinService],
@@ -51,6 +50,10 @@ import 'bootstrap';
 })
 
 export class AppModule {
+}
+
+export function httpFactory(backend: XHRBackend, options: RequestOptions, spinSvc: SpinService) {
+    return new HttpService(backend, options, spinSvc);
 }
 
 export function getBaseUrl() {

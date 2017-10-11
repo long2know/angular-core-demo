@@ -1,79 +1,79 @@
-﻿import { Directive, Attribute, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import * as $ from 'jquery';
-import 'bootstrap-select/dist/js/bootstrap-select';
+﻿//import { Directive, Attribute, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
+//import { Observable } from 'rxjs/Observable';
+//import * as $ from 'jquery';
+//import 'bootstrap-select/dist/js/bootstrap-select';
 
-@Directive({
-    selector: '[bootstrapSelect]',
-    exportAs: 'bootstrap-select'
-})
-export class BootstrapSelectDirective implements OnInit, OnDestroy {
+//@Directive({
+//    selector: '[bootstrapSelect]',
+//    exportAs: 'bootstrap-select'
+//})
+//export class BootstrapSelectDirective implements OnInit, OnDestroy {
 
-    @Input()
-    required: string;
+//    @Input()
+//    required: string;
 
-    @Input()
-    set ngModel(values: string | string[]) {
-        setTimeout(() => this.selected = values);
-    }
-
-
-    constructor(private el: ElementRef) {
-
-    }
+//    @Input()
+//    set ngModel(values: string | string[]) {
+//        setTimeout(() => this.selected = values);
+//    }
 
 
-    ngOnInit() {
-        (<any>$(this.el.nativeElement)).selectpicker();
+//    constructor(private el: ElementRef) {
 
-        if (this.requiredAttribute)
-            (<any>$(this.el.nativeElement)).selectpicker('setStyle', 'required', 'add');
-
-        setTimeout(() => {
-            this.refresh();
-            this.doValidation();
-        });
-
-    }
+//    }
 
 
-    ngOnDestroy() {
-        (<any>$(this.el.nativeElement)).selectpicker('destroy');
-    }
+//    ngOnInit() {
+//        (<any>$(this.el.nativeElement)).selectpicker();
+
+//        if (this.requiredAttribute)
+//            (<any>$(this.el.nativeElement)).selectpicker('setStyle', 'required', 'add');
+
+//        setTimeout(() => {
+//            this.refresh();
+//            this.doValidation();
+//        });
+
+//    }
 
 
-    private doValidation() {
-        if (this.requiredAttribute) {
-            (<any>$(this.el.nativeElement)).selectpicker('setStyle', !this.valid ? 'ng-valid' : 'ng-invalid', 'remove');
-            (<any>$(this.el.nativeElement)).selectpicker('setStyle', this.valid ? 'ng-valid' : 'ng-invalid', 'add');
-        }
-    }
-
-    private get requiredAttribute() {
-        return this.required === "" || this.required == "true";
-    }
+//    ngOnDestroy() {
+//        (<any>$(this.el.nativeElement)).selectpicker('destroy');
+//    }
 
 
-    refresh() {
-        (<any>$(this.el.nativeElement)).selectpicker('refresh');
-    }
+//    private doValidation() {
+//        if (this.requiredAttribute) {
+//            (<any>$(this.el.nativeElement)).selectpicker('setStyle', !this.valid ? 'ng-valid' : 'ng-invalid', 'remove');
+//            (<any>$(this.el.nativeElement)).selectpicker('setStyle', this.valid ? 'ng-valid' : 'ng-invalid', 'add');
+//        }
+//    }
 
-    render() {
-        (<any>$(this.el.nativeElement)).selectpicker('render');
-    }
-
-
-    get valid(): boolean {
-        return this.requiredAttribute ? this.selected && this.selected.length > 0 : true;
-    }
+//    private get requiredAttribute() {
+//        return this.required === "" || this.required == "true";
+//    }
 
 
-    set selected(values: string | string[]) {
-        (<any>$(this.el.nativeElement)).selectpicker('val', values);
-        this.doValidation();
-    }
+//    refresh() {
+//        (<any>$(this.el.nativeElement)).selectpicker('refresh');
+//    }
 
-    get selected(): string | string[] {
-        return (<any>$(this.el.nativeElement)).selectpicker('val');
-    }
-}
+//    render() {
+//        (<any>$(this.el.nativeElement)).selectpicker('render');
+//    }
+
+
+//    get valid(): boolean {
+//        return this.requiredAttribute ? this.selected && this.selected.length > 0 : true;
+//    }
+
+
+//    set selected(values: string | string[]) {
+//        (<any>$(this.el.nativeElement)).selectpicker('val', values);
+//        this.doValidation();
+//    }
+
+//    get selected(): string | string[] {
+//        return (<any>$(this.el.nativeElement)).selectpicker('val');
+//    }
+//}

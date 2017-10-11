@@ -15,7 +15,7 @@ import { LoremIpsumService } from "../../services/loremIpsum.service";
 
 export class Route2Component implements OnInit {
     public hasChanges: Boolean = true;
-    private _items: Array<any>;
+    public _items: Array<any>;
     public items: Observable<Array<any>>;
 
     constructor(private changeRef: ChangeDetectorRef, private appRef: ApplicationRef, private apiService: ApiService, private lipsumSvc: LoremIpsumService) {
