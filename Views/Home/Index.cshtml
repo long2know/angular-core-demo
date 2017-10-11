@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "aspnet-core-demo";
+}
+
+<my-app>
+    <div id="pre-bootstrap">
+        <div class="messaging">
+            <h1>
+                App is Loading...
+            </h1>
+            <div class="cs-loader">
+                <div class="cs-loader-inner">
+                    <label>&#9679</label>
+                    <label>&#9679</label>
+                    <label>&#9679</label>
+                    <label>&#9679</label>
+                    <label>&#9679</label>
+                    <label>&#9679</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</my-app>
+<script src="~/dist/vendor.js" asp-append-version="true"></script>
+@section scripts {
+    <script src="~/dist/main-client.js" asp-append-version="true"></script>
+    <script src="~/spin.js" asp-append-version="true"></script>
+}

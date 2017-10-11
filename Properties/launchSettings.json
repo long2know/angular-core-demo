@@ -1,0 +1,30 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:8025/",
+      "sslPort": 44325
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44325/",
+      "environmentVariables": {
+        "LAUNCH_PROFILE": "IISExpress",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "RQReconciliationExceptions.Web": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44325",
+      "environmentVariables": {
+        "LAUNCH_PROFILE": "Kestrel",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
