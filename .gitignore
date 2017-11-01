@@ -263,3 +263,6 @@ coverage/
 
 .DS_Store
 package-lock.json
+
+wwwroot/dist/
+/aspnet-core-demo/wwwroot/dist
