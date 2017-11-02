@@ -1,4 +1,4 @@
-# Angular 4.x Demo
+# Angular 5.x Demo
 
 This is a repository for collecting my Angular 4.x demos and integrating them into a Visual Studio demo template [Longing to Know](https://long2know.com)
 
