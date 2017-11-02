@@ -1,4 +1,10 @@
 import { Injectable } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/finally';
 declare var Spinner: any;
 
 @Injectable()
@@ -60,3 +66,63 @@ export class SpinService {
         })
     }
 }
+
+
+@Injectable()
+export class SpinInterceptor implements HttpInterceptor {
+    public pendingRequests: number = 0;
+    public showLoading: Boolean = false;
+
+    constructor(private spinSvc: SpinService) { }
+
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        this.pendingRequests++;
+        this.turnOnModal();
+
+        return next.handle(req)
+            .do((event: HttpEvent<any>) => {
+                if (event instanceof HttpResponse) {
+
+                }
+            })
+            .catch(err => {
+                if (err instanceof HttpErrorResponse) {
+                    if (err.status === 401) {
+                        // JWT expired, go to login
+                        // Observable.throw(err);
+                    }
+                }
+
+                console.log('Caught error', err);
+                return Observable.throw(err);
+            })
+            .finally(() => {
+                console.log("Finally.. delaying, though.")
+                var timer = Observable.timer(1000);
+                timer.subscribe(t => {
+                    this.turnOffModal();
+                });
+            });
+    }
+
+    private turnOnModal() {
+        if (!this.showLoading) {
+            this.showLoading = true;
+            this.spinSvc.spin("body", "modal", "#FFFFFF", "rgba(51, 51, 51, 0.1)");
+            console.log("Turned on modal");
+        }
+        this.showLoading = true;
+    }
+
+    private turnOffModal() {
+        this.pendingRequests--;
+        if (this.pendingRequests <= 0) {
+            if (this.showLoading) {
+                this.spinSvc.spin("body", "modal", "#FFFFFF", "rgba(51, 51, 51, 0.1)");
+            }
+            this.showLoading = false;
+        }
+        console.log("Turned off modal");
+    }
+}
+

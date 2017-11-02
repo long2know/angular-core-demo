@@ -23,27 +23,27 @@ import { ApiService } from './services/api.service';
 import { DialogService, DialogComponent } from './services/dialog.service';
 import { DataService } from './services/data.service';
 import { LoremIpsumService } from './services/loremIpsum.service';
-import { SpinService } from './services/spin.service';
-
-import { Http, HttpModule, RequestOptions, XHRBackend } from '@angular/http';
-import { HttpService } from './services/http.service';
+import { SpinService, SpinInterceptor } from './services/spin.service';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RequestOptions, XHRBackend } from '@angular/http';
 
 import 'jquery';
 import 'bootstrap';
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, JsonpModule, HttpModule, NgbModule.forRoot(), AppRoutingModule],
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, JsonpModule, HttpClientModule, NgbModule.forRoot(), AppRoutingModule],
     declarations: [AppComponent, Route1Component, Route2Component, Route3Component, Route4Component, DialogComponent, Multiselect, Tristate, CustomTable, Pager, Filter, CustomFilterPipe, FilterPipe, EqualPipe, GroupByPipe ],
     providers: [
         EqualPipe,
         { provide: APP_BASE_HREF, useValue: document.location.pathname },
         { provide: 'BASE_URL', useFactory: getBaseUrl },
         { provide: ErrorHandler, useClass: AppErrorHandler },
-        {
-            provide: Http,
-            useFactory: httpFactory,
-            deps: [XHRBackend, RequestOptions, SpinService]
-        },
+        { provide: HTTP_INTERCEPTORS, useClass: SpinInterceptor, multi: true },
+        //{
+        //    provide: HttpClient,
+        //    useFactory: httpFactory,
+        //    deps: [XHRBackend, RequestOptions, SpinService]
+        //},
         NavigationService, DialogService, ApiService, DataService, LoremIpsumService, SpinService],
     entryComponents: [DialogComponent],
     bootstrap: [AppComponent],
@@ -52,9 +52,9 @@ import 'bootstrap';
 export class AppModule {
 }
 
-export function httpFactory(backend: XHRBackend, options: RequestOptions, spinSvc: SpinService) {
-    return new HttpService(backend, options, spinSvc);
-}
+//export function httpFactory(backend: XHRBackend, options: RequestOptions, spinSvc: SpinService) {
+//    return new HttpService(backend, options, spinSvc);
+//}
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
