@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { DialogService, DialogComponent } from '../services/dialog.service';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
     selector: 'my-app',
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
     public isMenuExpanded: Boolean = false;
 
     constructor(private changeRef: ChangeDetectorRef, private appRef: ApplicationRef,
-        private route: ActivatedRoute, private router: Router, private dialogService: DialogService) {
+        private route: ActivatedRoute, private router: Router, private dialogService: DialogService,
+        private notificationService: NotificationService) {
     }
 
     toggleMenu() {
@@ -43,6 +45,8 @@ export class AppComponent implements OnInit {
                     currentRoute = currentRoute.children[0];
                 }
                 console.log(currentRoute.snapshot.data);
+
+                this.notificationService.success("Hey, this is a toast");
             })
     }
 }

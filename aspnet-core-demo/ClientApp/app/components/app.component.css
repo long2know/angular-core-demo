@@ -172,13 +172,10 @@ a.user-name.app-component {
     vertical-align: bottom;
 }
 
-
-
 /*footer.app-component {
     margin-top: 10px;
     font-weight: bold;
 }*/
-
 
 .navbar-inner.footer.app-component {
     background-color: #f5f5f5;
@@ -187,8 +184,6 @@ a.user-name.app-component {
     box-shadow: none;
     height: 40px;
 }
-
-
 
 .vcenter_text.app-component {
     line-height: 40px;

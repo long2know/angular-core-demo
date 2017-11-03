@@ -1,25 +1,26 @@
 <div class="container-fluid" style="padding:0; margin: 0;">
-  <nav class="navbar navbar-light bg-faded rounded navbar-toggleable">
-    <button (click)="toggleMenu()" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#containerNavbar" aria-controls="containerNavbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#">Navbar</a>
-    <div class="collapse navbar-collapse" [ngClass]="{'show': isMenuExpanded}" id="containerNavbar">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item"><a class="nav-link" [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">Custom Table</a></li>
-        <li class="nav-item"><a class="nav-link" [routerLink]="['route2']" [routerLinkActive]="['active']">Tristate Checkbox</a></li>
-        <li class="nav-item"><a class="nav-link" [routerLink]="['route3']" [routerLinkActive]="['active']">Multiselect Dropdown</a></li>
-        <li class="nav-item"><a class="nav-link" [routerLink]="['route4']" [routerLinkActive]="['active']">Loading Indicator</a></li>
-      </ul>
-    </div>
-  </nav>
-  <template ngbModalContainer>
-  </template>
+    <nav class="navbar navbar-light bg-faded rounded navbar-toggleable">
+        <button (click)="toggleMenu()" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#containerNavbar" aria-controls="containerNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">Navbar</a>
+        <div class="collapse navbar-collapse" [ngClass]="{'show': isMenuExpanded}" id="containerNavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">Custom Table</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['route2']" [routerLinkActive]="['active']">Tristate Checkbox</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['route3']" [routerLinkActive]="['active']">Multiselect Dropdown</a></li>
+                <li class="nav-item"><a class="nav-link" [routerLink]="['route4']" [routerLinkActive]="['active']">Loading Indicator</a></li>
+            </ul>
+        </div>
+    </nav>
+    <template ngbModalContainer>
+    </template>
 </div>
 <br />
 <hr>
 <p>
-  This demo plnkr demonstrates many Angular concepts.  Thse include a <strong>Custom Table</strong>, a <strong>Tri-state Checkbbox</strong>, a <strong>Multiselect Dropdown with Form intregration</strong> and a <strong>Menu plus NavigationService with a DialogService</strong>. Visit <a href="https://long2know.com/" target="_blank">https://long2know.com</a> for more demos and discussion..
+    This demo plnkr demonstrates many Angular concepts.  Thse include a <strong>Custom Table</strong>, a <strong>Tri-state Checkbbox</strong>, a <strong>Multiselect Dropdown with Form intregration</strong> and a <strong>Menu plus NavigationService with a DialogService</strong>. Visit <a href="https://long2know.com/" target="_blank">https://long2know.com</a> for more demos and discussion..
 </p>
 <hr>
 <router-outlet></router-outlet>
+<ng2-toasty></ng2-toasty>

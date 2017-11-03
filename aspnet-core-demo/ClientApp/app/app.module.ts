@@ -21,17 +21,19 @@ import { Route4Component } from './components/route4/route4.component';
 import { NavigationService } from './services/navigation.service';
 import { ApiService } from './services/api.service';
 import { DialogService, DialogComponent } from './services/dialog.service';
+import { NotificationService } from './services/notification.service';
 import { DataService } from './services/data.service';
 import { LoremIpsumService } from './services/loremIpsum.service';
 import { SpinService, SpinInterceptor } from './services/spin.service';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RequestOptions, XHRBackend } from '@angular/http';
+import { ToastyModule } from 'ng2-toasty';
 
 import 'jquery';
 import 'bootstrap';
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, JsonpModule, HttpClientModule, NgbModule.forRoot(), AppRoutingModule],
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, JsonpModule, HttpClientModule, NgbModule.forRoot(), AppRoutingModule, ToastyModule.forRoot()],
     declarations: [AppComponent, Route1Component, Route2Component, Route3Component, Route4Component, DialogComponent, Multiselect, Tristate, CustomTable, Pager, Filter, CustomFilterPipe, FilterPipe, EqualPipe, GroupByPipe ],
     providers: [
         EqualPipe,
@@ -44,7 +46,7 @@ import 'bootstrap';
         //    useFactory: httpFactory,
         //    deps: [XHRBackend, RequestOptions, SpinService]
         //},
-        NavigationService, DialogService, ApiService, DataService, LoremIpsumService, SpinService],
+        NavigationService, NotificationService, DialogService, ApiService, DataService, LoremIpsumService, SpinService],
     entryComponents: [DialogComponent],
     bootstrap: [AppComponent],
 })
