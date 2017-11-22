@@ -44,7 +44,7 @@ export class DialogService {
   
   public confirm() {
     const modalRef = this.modalService.open(DialogComponent);
-    modalRef.componentInstance.name = "Discard Changes?";
+    modalRef.componentInstance.title = "Discard Changes?";
     modalRef.componentInstance.message = "Are you sure you want to discard your changes?";
     modalRef.componentInstance.changeRef.markForCheck();
     return modalRef.result;
