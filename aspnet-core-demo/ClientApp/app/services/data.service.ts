@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { CustomTableOptions, CustomTableConfig, CustomTableColumnDefinition } from '../components/customTable/customTable.component';
 
 @Injectable()
@@ -10,7 +9,12 @@ export class DataService {
     }
 
     public sort(array: Array<any>, fieldName: string, direction: string, columns: Array<CustomTableColumnDefinition>) {
-        var column: CustomTableColumnDefinition = columns.filter((column) => column.value === fieldName)[0];
+        // Check to see if the column exists
+        var filterResult = columns.filter((column) => column.value === fieldName);
+        if (filterResult.length === 0) {
+            return array;
+        }
+        var column: CustomTableColumnDefinition = filterResult[0];
         var isNumeric: Boolean = (column.filter && column.filter.indexOf("currency") != -1) || (column.isNumeric === true);
 
         var sortFunc = function (field, rev, primer) {
@@ -46,6 +50,8 @@ export class DataService {
     }
 
     public pageData(records: Array<any>, options: CustomTableOptions): Array<any> {
+        console.log("Paging data..");
+
         if (records) {
             var arrLength = options.config.totalCount = records.length;
             options.config.totalPages = parseInt(Math.ceil(options.config.totalCount / options.config.pageSize).toString());
@@ -64,7 +70,9 @@ export class DataService {
                     options.config.upperRange = records.length;
                 }
             }
-            return records.slice(startIndex, endIndex);
+            let arr = records.slice(startIndex, endIndex);
+            console.log("Number of records returned:" + arr.length);
+            return arr;
         } else {
             options.config.lowerRange = 0;
             options.config.upperRange = 0;

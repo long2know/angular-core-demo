@@ -1,14 +1,11 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Renderer, ElementRef, forwardRef } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/fromEvent';
+import { Observable, Subscription, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, throttleTime, } from 'rxjs/operators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CustomTableOptions, CustomTableConfig, CustomTableColumnDefinition } from '../customTable/customTable.component';
-import { Subscription } from "rxjs/Subscription";
 
 @Pipe({
     name: 'customFilter'
@@ -76,7 +73,7 @@ export class Filter implements OnInit, ControlValueAccessor {
     private subscription: Subscription;
     public filteredData: Array<any>;
     @Input() public options: CustomTableOptions;
-    @Output() filterChange: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
+    @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private _elRef: ElementRef, private _renderer: Renderer,
         private _changeDetectorRef: ChangeDetectorRef) {
@@ -90,8 +87,8 @@ export class Filter implements OnInit, ControlValueAccessor {
         this.filterPlaceholder = "Filter..";
         this.filterInput
             .valueChanges
-            .debounceTime(200)
-            .distinctUntilChanged()
+            .pipe(debounceTime(400))
+            .pipe(distinctUntilChanged())
             .subscribe(term => {
                 this.filterText = term;
                 //var newObj = this.options.columns.reduce(function(obj, column) {
@@ -100,7 +97,7 @@ export class Filter implements OnInit, ControlValueAccessor {
                 //  return obj;
                 //}, {});
                 var arr = this.filterPipe.transform(this.filteredData, this.options.columns, this.filterText, false);
-                this.filterChange.emit(arr);
+                this.filterChange.emit({ filterData: arr, filterText: this.filterText });
             });
     }
 }

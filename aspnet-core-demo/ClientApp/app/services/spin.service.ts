@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, Inject } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from "rxjs/Observable";
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/finally';
+import { Observable, Subscription, timer, of, from } from "rxjs";
+import { map, tap, catchError, finalize } from "rxjs/operators";
+import { ApiService, ConfigService, DialogService, IdleTimeoutService } from "./index";
+import { DOCUMENT } from '@angular/platform-browser';
 declare var Spinner: any;
 
 @Injectable()
@@ -67,25 +66,105 @@ export class SpinService {
     }
 }
 
-
 @Injectable()
 export class SpinInterceptor implements HttpInterceptor {
     public pendingRequests: number = 0;
     public showLoading: Boolean = false;
+    private _idleTimeoutSvc: IdleTimeoutService;
+    private _apiSvc: ApiService;
+    private _dialogSvc: DialogService;
+    private _configSvc: ConfigService;
+    private _idleTimerSubscription: Subscription;
+    private _dismissTimer: Observable<number>;
+    private _dismissSubscription: Subscription;
+    private document: Document;
 
-    constructor(private spinSvc: SpinService) { }
+    constructor(private spinSvc: SpinService, @Inject(DOCUMENT) private doc: any, private injector: Injector) {
+        setTimeout(() => {
+            this.document = doc as Document;
+            this.subscribeToIdleTimeoutService();
+        });
+    }
+
+    private subscribeToIdleTimeoutService() {
+        this._idleTimeoutSvc = this.injector.get(IdleTimeoutService);
+        this._apiSvc = this.injector.get(ApiService);
+        this._dialogSvc = this.injector.get(DialogService);
+        this._configSvc = this.injector.get(ConfigService);
+        this._idleTimerSubscription = this._idleTimeoutSvc.timeoutExpired.subscribe(r => {
+            this.startDismissTimer();
+            let modalPromise: Promise<any> = this._dialogSvc.open("Session Expiring!", "Your session is about to expire. Do you need more time?", true, "Yes", "No");
+            let newObservable: Observable<any> = from(modalPromise);
+            newObservable.subscribe(
+                (res) => {
+                    this._dismissSubscription.unsubscribe();
+                    if (res === true) {
+                        console.log("Extending session...");
+                        this._apiSvc
+                            .getUrl("/home/heartbeat")
+                            .subscribe(() => { this._idleTimeoutSvc.startTimer(); });
+                    } else {
+                        console.log("Not extending session... logging out");
+                        this.document.location.href = "/account/logout";
+                    }
+                },
+                (reason) => {
+                    console.log("Dismissed " + reason);
+                    this._dismissSubscription.unsubscribe();
+                    this.document.location.href = "/account/logout";
+                }
+            );
+        });
+    }
+
+    private startDismissTimer() {
+        if (this._dismissSubscription) {
+            this._dismissSubscription.unsubscribe();
+        }
+
+        // This needs to come from the config
+        let timeout: number = 2 * 60 * 1000;
+        if (this._configSvc.configData.authSettings.authDismissTimeout) {
+            timeout = <number>this._configSvc.configData.authSettings.authDismissTimeout;
+        }
+        this._dismissTimer = timer(timeout);
+        this._dismissSubscription = this._dismissTimer.subscribe(n => {
+            this._dismissSubscription.unsubscribe();
+            console.log("Dismiss timer expired ... logging out");
+            this.document.location.href = "/account/logout";
+        });
+    }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.pendingRequests++;
-        this.turnOnModal();
+        let isExcluded: boolean = false;
 
-        return next.handle(req)
-            .do((event: HttpEvent<any>) => {
+        // Determine if excluded
+        for (let exclusion of spinExclusions) {
+            let isMatch: boolean = exclusion.test(req.url);
+            exclusion.lastIndex = 0;
+            if (isMatch) {
+                isExcluded = true;
+                break;
+            }
+        }
+
+        if (!isExcluded) {
+            this.turnOnModal();
+        }
+
+        return next.handle(req).pipe(
+            tap((event: HttpEvent<any>) => {
+                // Reset the timer ..
+                if (this._idleTimeoutSvc) {
+                    this._idleTimeoutSvc.startTimer();
+                }
+
                 if (event instanceof HttpResponse) {
 
                 }
-            })
-            .catch(err => {
+            }),
+            catchError(err => {
                 if (err instanceof HttpErrorResponse) {
                     if (err.status === 401) {
                         // JWT expired, go to login
@@ -95,14 +174,16 @@ export class SpinInterceptor implements HttpInterceptor {
 
                 console.log('Caught error', err);
                 return Observable.throw(err);
+            }),
+            finalize(() => {
+                //console.log("Finally.. delaying, though.")
+                //var timer = Observable.timer(1000);
+                //timer.subscribe(t => {
+                //    this.turnOffModal();
+                //});
+                this.turnOffModal();
             })
-            .finally(() => {
-                console.log("Finally.. delaying, though.")
-                var timer = Observable.timer(1000);
-                timer.subscribe(t => {
-                    this.turnOffModal();
-                });
-            });
+        );        
     }
 
     private turnOnModal() {
@@ -125,4 +206,15 @@ export class SpinInterceptor implements HttpInterceptor {
         console.log("Turned off modal");
     }
 }
+
+const spinExclusions: RegExp[] = [
+    /(home\/heartbeat)/g,
+    /(api\/ratePlan)/g,
+    ///(\/api\/employee)/g,
+    /(\/api\/product)/g,
+    /(\/payment\/api\/paymentaudit)/g,
+    /(\/payment\/api\/transactionaudit)/g,
+    /(\/payment\/api\/transactiondetailaudit)/g,
+    /(\/api\/config)/g // for testing
+];
 

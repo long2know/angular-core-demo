@@ -1,13 +1,10 @@
 import { Component, Input, Injectable, ApplicationRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Multiselect } from '../multiselect/multiselect.component';
-import { CustomTable, CustomTableOptions, CustomTableConfig, CustomTableColumnDefinition } from '../customTable/customTable.component';
-import { DataService } from '../../services/data.service';
-import { Observable, Subject, BehaviorSubject } from 'rxjs/Rx';
 import { Pipe, PipeTransform, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormControl } from '@angular/forms';
-import { LoremIpsumService } from "../../services/loremIpsum.service";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, BehaviorSubject, of } from 'rxjs';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { CustomTable, CustomTableOptions, CustomTableConfig, CustomTableColumnDefinition, Multiselect } from '../';
+import { DataService, LoremIpsumService } from "../../services";
 
 @Component({
     templateUrl: 'route1.html',
@@ -19,7 +16,7 @@ export class Route1Component implements OnInit {
         records: BehaviorSubject<any[]>;
         columns: CustomTableColumnDefinition[];
     };
-    public hasChanges: Boolean = true;
+    public hasChanges: Boolean = false;
     public tableOptions: CustomTableOptions;
     public filterOptins: CustomTableOptions;
     public records: Array<any> = [];
@@ -37,11 +34,11 @@ export class Route1Component implements OnInit {
 
     canDeactivate() {
         console.log("Detecting changes. Has Changes: " + this.hasChanges);
-        return Observable.of(!this.hasChanges);
+        return of(!this.hasChanges);
     }
 
     filterChange($event) {
-        this.filteredData = $event;
+        this.filteredData = $event.filterData;
         this.sortChange(null);
         this.pushChange();
     }
@@ -66,7 +63,7 @@ export class Route1Component implements OnInit {
 
     initTableOptions() {
         var columns: Array<CustomTableColumnDefinition> = [
-            { name: 'Column 1', value: 'column1', binding: "r.column3 + \" / \" + r.column4", style: {}, isWatched: true, isAnchor: false, isComputed: true, srefBinding: 'state expression here' },
+            { name: 'Column 1', value: 'column1', binding: "r.column3 + \" / \" + r.column4", style: {}, isWatched: true, isAnchor: true, isComputed: true, routerLink: "['/route2', r.column2]" },
             { name: 'Column 2', value: 'column2', binding: 'column2', isWatched: true, style: {} },
             { name: 'Column 3', value: 'column3', binding: 'column3', isWatched: true, style: {} },
             { name: 'Column 4', value: 'column4', binding: 'column4', isWatched: true, style: {} },
@@ -106,7 +103,7 @@ export class Route1Component implements OnInit {
             columns: columns
         };
 
-        this.filterChange(this.records);
+        this.filterChange({ filterData: this.records, filterText: "" });
 
         // For the filter, we don't want to refresh data, so we push once.
         // This allows the filter to control this.records

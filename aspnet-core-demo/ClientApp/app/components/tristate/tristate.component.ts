@@ -1,11 +1,7 @@
-import { Component, Input, Output, OnInit, ViewChild, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Renderer, ElementRef, forwardRef } from '@angular/core';
-import { Pipe, PipeTransform, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { Subscription } from "rxjs/Subscription";
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { Component, Input, Output, ViewChild, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Renderer, ElementRef, forwardRef } from '@angular/core';
+import { Pipe, PipeTransform, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription, fromEvent } from 'rxjs';
+import { debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
     selector: 'tri-state-checkbox',
@@ -49,6 +45,10 @@ export class Tristate implements AfterViewInit {
     }
 
     ngOnInit() { }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
+    }
 
     ngAfterViewInit() {
         this._subscription = this.items.subscribe(res => {

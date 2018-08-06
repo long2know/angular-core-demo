@@ -1,8 +1,6 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Renderer, ElementRef, forwardRef } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/fromEvent';
+import { Observable, Subscription, fromEvent } from 'rxjs';
+import { debounceTime, throttleTime } from 'rxjs/operators';
 import { DataService } from '../../services/data.service';
 import { CustomTableOptions } from "../customTable/customTable.component";
 

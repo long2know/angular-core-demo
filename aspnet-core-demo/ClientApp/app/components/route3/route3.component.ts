@@ -1,12 +1,11 @@
 import { Component, Input, Injectable, ApplicationRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Multiselect } from '../multiselect/multiselect.component';
-import { Observable } from 'rxjs/Rx';
 import { Pipe, PipeTransform, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormControl } from '@angular/forms';
-import { EqualPipe } from '../../pipes/equal-pipe';
-import { LoremIpsumService } from "../../services/loremIpsum.service";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, of, timer } from 'rxjs';
+import { FormsModule, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Multiselect } from '../';
+import { EqualPipe } from '../../pipes';
+import { LoremIpsumService } from "../../services";
 
 @Component({
     templateUrl: 'route3.html',
@@ -14,7 +13,7 @@ import { LoremIpsumService } from "../../services/loremIpsum.service";
 })
 
 export class Route3Component implements OnInit {
-    public hasChanges: Boolean = true;
+    public hasChanges: Boolean = false;
     public items: Observable<Array<any>>;
     public selectedItems: Observable<Array<any>>;
     public _selectedItems: Array<any> = [];
@@ -23,13 +22,13 @@ export class Route3Component implements OnInit {
 
     constructor(private changeRef: ChangeDetectorRef, private appRef: ApplicationRef, private lipsumSvc: LoremIpsumService) {
         this._items = [];
-        this.items = Observable.of(this._items);
+        this.items = of(this._items);
         this.items.subscribe(res => { console.log("Items changed"); this.watchedItems = res; });
     }
 
     canDeactivate() {
         console.log("Detecting changes. Has Changes: " + this.hasChanges);
-        return Observable.of(!this.hasChanges);
+        return of(!this.hasChanges);
     }
 
     createItems() {
@@ -80,8 +79,8 @@ export class Route3Component implements OnInit {
 
     ngOnInit() {
         this.createItems();
-        let timer = Observable.timer(20000, 20000);
-        timer.subscribe(t => {
+        let localTimer = timer(20000, 20000);
+        localTimer.subscribe(t => {
             //this.createItems();
         });
     }

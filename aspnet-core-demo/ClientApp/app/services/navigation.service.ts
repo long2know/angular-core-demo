@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/delay';
+import { Observable, of, from } from 'rxjs';
+import { tap, delay, map, flatMap, catchError } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 
 export interface CanComponentDeactivate {
@@ -37,13 +35,13 @@ export class NavigationService implements CanDeactivate<CanComponentDeactivate>,
 
     private intercept(observable: Observable<any>): Observable<any> {
         return observable
-            .map((res) => { console.log("Mapped: " + res); return res; })
-            .flatMap((res) => {
+            .pipe(map((res) => { console.log("Mapped: " + res); return res; }))
+            .pipe(flatMap((res) => {
                 // Inverse logic - false means deactivate of route is not allowed (hasChanges is true) 
                 if (res === false) {
                     console.log("Showing confirm dialog.");
                     var modalPromise = this.dialogService.confirm();
-                    var newObservable = Observable.fromPromise(modalPromise);
+                    var newObservable = from(modalPromise);
                     newObservable.subscribe(
                         (res) => {
                             if (res === true) {
@@ -58,9 +56,9 @@ export class NavigationService implements CanDeactivate<CanComponentDeactivate>,
                     );
                     return newObservable;
                 } else {
-                    return Observable.of(res);
+                    return of(res);
                 }
-            })
-            .catch(error => Observable.of(false));
+            }),
+            catchError(error => of(false)));
     }
 }

@@ -1,0 +1,38 @@
+<div class="form row col-lg-12">
+    <!--<div class="row">
+        <strong class="float-left">Custom Table</strong>
+        <label class="float-right">
+            <input type="checkbox" name="hasChanges" [(ngModel)]="hasChanges"> Has Changes
+        </label>
+    </div>
+    <hr>-->
+
+    <ng-template #rt let-r="result" let-t="term">
+        {{ r.name}}
+    </ng-template>
+
+    <label for="typeahead-template">Search for an employee:</label>
+    <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [resultTemplate]="rt"
+           [inputFormatter]="formatter" placeholder="Employee Search" />
+    <button type="button" (click)="addEmployee(model)" class="btn" [ngClass]="!model || !model.id ? 'btn-default' : 'btn-success'" [disabled]="!model || !model.id">
+        <i class="fa fa-plus-circle fa-lg"></i> Add Employee
+    </button>
+    <!--<hr>
+    <pre>Model: {{ model | json }}</pre>-->
+
+    <!--<div class="row">
+        <filter [options]="filterOptions" (filterChange)="filterChange($event)"></filter>
+    </div>-->
+    <div class="row col-lg-12" *ngIf="tableOptions.config.totalCount > 0">
+        <custom-table [options]="tableOptions" (sortChange)="sortChange($event)">Custom table here</custom-table>
+    </div>
+    <div class="row col-lg-12" *ngIf="tableOptions.config.totalCount === 0">
+        No records to display ..
+    </div>
+    <button type="button" *ngIf="tableOptions.config.totalCount > 0" (click)="deleteEmployees()" class="btn btn-danger">
+        <i class="fa fa-trash-o fa-lg"></i> Remove Selected from Share
+    </button>
+    <div class="row col-lg-12">
+        <pager [options]="tableOptions" (pageChange)="pageChange($event)"></pager>
+    </div>
+</div>

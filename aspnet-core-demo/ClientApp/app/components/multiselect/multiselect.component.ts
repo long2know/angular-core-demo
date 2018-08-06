@@ -1,14 +1,11 @@
 import { Component, ViewEncapsulation, Input, Output, OnInit, ViewChild, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Renderer, ElementRef, forwardRef } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/throttleTime';
-import 'rxjs/add/observable/fromEvent';
+import { Observable, Subscription, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, throttleTime } from 'rxjs/operators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { EqualPipe } from '../../pipes/equal-pipe';
-import { Subscription } from "rxjs/Subscription";
+import { EqualPipe } from '../../pipes';
 
 @Pipe({
     name: 'filter'
@@ -138,8 +135,8 @@ export class Multiselect implements OnInit, ControlValueAccessor {
         this.setHeaderText();
         this.filterInput
             .valueChanges
-            .debounceTime(200)
-            .distinctUntilChanged()
+            .pipe(debounceTime(200))
+            .pipe(distinctUntilChanged())
             .subscribe(term => {
                 this.filterText = term;
                 this._changeDetectorRef.markForCheck();

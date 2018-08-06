@@ -1,0 +1,28 @@
+<div class="form-group">
+    <input class="form-control" type="text" [value]="filterText" [placeholder]="filterPlaceholder"
+           [formControl]="filterInput" />
+    <div class="button-panel">
+        <button type="button" class="btn btn-primary" style="margin-left:10px;" (click)="addFilter(); $event.stopPropagation()">Add Filter</button>
+        <button type="button" class="btn btn-default column-selector-button" [class.active]="columnSelectorOpen"
+                (click)="columnSelectorOpen = !columnSelectorOpen; $event.stopPropagation()">
+            <i class="fa fa-list"></i>
+        </button>
+        <div class="column-selector-wrapper" (click)="$event.stopPropagation()">
+            <div *ngIf="columnSelectorOpen" class="column-selector-box card">
+                <div *ngFor="let column of options.columns" class="column-selector-column checkbox">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="column.isSelected" />
+                        <span [textContent]="column.name"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="filters && filters.length > 0" class="filter-box">
+        Filters:
+        <button *ngFor="let filter of filters" class="filter-button" style="margin-right:5px;cursor:default;">
+            <i class="fa fa-window-close" aria-hidden="true" (click)="removeFilter(filter.filterKey)"></i>
+            {{filter.filterText}}
+        </button>
+    </div>
+</div>
