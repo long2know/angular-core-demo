@@ -1,6 +1,6 @@
 import { Injectable, Injector, Inject } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subscription, timer, of, from } from "rxjs";
+import { Observable, Subscription, timer, of, from, throwError } from "rxjs";
 import { map, tap, catchError, finalize } from "rxjs/operators";
 import { ApiService, ConfigService, DialogService, IdleTimeoutService } from "./index";
 import { DOCUMENT } from '@angular/platform-browser';
@@ -168,12 +168,12 @@ export class SpinInterceptor implements HttpInterceptor {
                 if (err instanceof HttpErrorResponse) {
                     if (err.status === 401) {
                         // JWT expired, go to login
-                        // Observable.throw(err);
+                        // throwError(err);
                     }
                 }
 
                 console.log('Caught error', err);
-                return Observable.throw(err);
+                return throwError(err);
             }),
             finalize(() => {
                 //console.log("Finally.. delaying, though.")

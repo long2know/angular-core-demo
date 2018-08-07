@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError, finalize, tap } from 'rxjs/operators';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class CustomerHeadersInterceptor implements HttpInterceptor {
                 }
 
                 console.log('Caught error', err);
-                return Observable.throw(err);
+                return throwError(err);
             }),
             finalize(() => {
 
