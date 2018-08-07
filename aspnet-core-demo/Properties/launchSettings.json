@@ -8,21 +8,21 @@
     }
   },
   "profiles": {
+    "aspnet-code-demo": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44325",
+      "environmentVariables": {
+        "LAUNCH_PROFILE": "Kestrel",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "https://localhost:44325/",
       "environmentVariables": {
         "LAUNCH_PROFILE": "IISExpress",
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "RQReconciliationExceptions.Web": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:44325",
-      "environmentVariables": {
-        "LAUNCH_PROFILE": "Kestrel",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

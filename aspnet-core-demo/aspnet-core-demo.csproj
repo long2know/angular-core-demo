@@ -26,6 +26,9 @@
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
     <Content Remove="wwwroot\dist\**" />
+    <Content Remove="wwwroot\assets\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <Content Remove="package-lock.json" />
   </ItemGroup>
 
   <Target Name="DevelopementRunWebpack" AfterTargets="Build" Condition="!Exists('wwwroot\dist\vendor.js')">

@@ -44,7 +44,7 @@ const nonTreeShakableModules = [
     //'./ClientApp/app/assets/styles/cs_flex-layout.css',
     //'./ClientApp/app/assets/styles/cs_bootstrap.css',
     //'./ClientApp/app/assets/styles/cs_opensans.css',
-    //'./ClientApp/app/styles-external.css',
+    './ClientApp/app/styles-external.css',
 ];
 const allModules = treeShakableModules.concat(nonTreeShakableModules);
 
