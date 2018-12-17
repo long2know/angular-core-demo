@@ -19,7 +19,7 @@ import { Multiselect } from '.';
 
 export class AppComponent implements OnInit {
     private _lipsum: any;
-    public isMenuExpanded: Boolean = false;
+    public isMenuExpanded: boolean = false;
 
     constructor(private changeRef: ChangeDetectorRef, private appRef: ApplicationRef,
         private route: ActivatedRoute, public router: Router, private dialogService: DialogService,

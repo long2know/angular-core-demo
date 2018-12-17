@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { NgbModal, NgbModalOptions, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Component, Input, OnInit, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import 'setimmediate';
 
 @Component({
     template: `
@@ -47,14 +48,20 @@ export class DialogService {
         const modalRef = this.modalService.open(DialogComponent);
 
         let instance = (modalRef as any)._windowCmptRef.instance
-        setImmediate(() => {
-            instance.windowClass = 'custom-show'
-        })
+        instance.windowClass = '';
+
+        //setImmediate(() => {
+        //    instance.windowClass = 'custom-show'
+        //})
+
+        setTimeout(() => {
+            instance.windowClass = 'custom-show';
+        }, 0)
 
         let fx = (modalRef as any)._removeModalElements.bind(modalRef);
         (modalRef as any)._removeModalElements = () => {
-            instance.windowClass = ''
-            setTimeout(fx, 250)
+            instance.windowClass = '';
+            setTimeout(fx, 250);
         }
 
         modalRef.componentInstance.title = "Discard Changes?";
@@ -68,9 +75,14 @@ export class DialogService {
         const modalRef = this.modalService.open(DialogComponent, options);
 
         let instance = (modalRef as any)._windowCmptRef.instance
-        setImmediate(() => {
-            instance.windowClass = "custom-show";
-        })
+        
+        //setImmediate(() => {
+        //    instance.windowClass = "custom-show";
+        //})
+
+        setTimeout(() => {
+            instance.windowClass = 'custom-show';
+        }, 0)
 
         let fx = (modalRef as any)._removeModalElements.bind(modalRef);
         (modalRef as any)._removeModalElements = () => {

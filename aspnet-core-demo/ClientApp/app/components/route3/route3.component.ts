@@ -43,12 +43,9 @@ export class Route3Component implements OnInit {
         for (i = 0; i < numItems; i++) {
             var numWords: number = Math.floor(Math.random() * (max - min + 1)) + min;
             var label: string = this.lipsumSvc.generate(numWords);
-            this._items.push({ label: label, value: i.toString() });
+            this._items.push({ label: label, value: i.toString(), checked: false });
             console.log(label);
         }
-
-        // Randomly choose a few items
-        this.randomSelect();
     }
 
     randomSelect() {
@@ -76,9 +73,12 @@ export class Route3Component implements OnInit {
         console.log('received change event');
     }
 
-
     ngOnInit() {
         this.createItems();
+
+        // Randomly choose a few items
+        this.randomSelect();
+
         let localTimer = timer(20000, 20000);
         localTimer.subscribe(t => {
             //this.createItems();

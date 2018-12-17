@@ -266,3 +266,7 @@ package-lock.json
 
 wwwroot/dist/
 /aspnet-core-demo/wwwroot/dist
+/aspnet-core-demo/wwwroot/lib/npmlibs
+/aspnet-core-demo/wwwroot/assets/lib.min.js
+/aspnet-core-demo/wwwroot/assets/site.min.css
+/aspnet-core-demo/wwwroot/assets/styles

@@ -1,9 +1,10 @@
 <div class="container-fluid" style="padding:0; margin: 0;">
-    <nav class="navbar navbar-light bg-faded rounded navbar-toggleable">
-        <button (click)="toggleMenu()" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#containerNavbar" aria-controls="containerNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded navbar-toggleable">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button (click)="toggleMenu()" class="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#containerNavbar" aria-controls="containerNavbar"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">Navbar</a>
         <div class="collapse navbar-collapse" [ngClass]="{'show': isMenuExpanded}" id="containerNavbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" [routerLink]="['/']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}">Custom Table</a></li>

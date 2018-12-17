@@ -76,8 +76,10 @@ export class Multiselect implements OnInit, ControlValueAccessor {
         console.log('writing value ' + value);
         if (value !== undefined) {
             this._selectedItems = value;
+            this.setHeaderText();
         } else {
             this._selectedItems = [];
+            this.setHeaderText();
         }
     }
 
