@@ -1,4 +1,4 @@
-# Angular 6.x Demo
+# Angular 7.x Demo
 
 This is a repository for collecting my Angular 6.x demos and integrating them into a Visual Studio demo template [Longing to Know](https://long2know.com)
 
