@@ -1,129 +1,74 @@
-using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
-using aspnet_core_demo.Helpers;
+using Microsoft.Extensions.Hosting;
 
 namespace aspnet_core_demo
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add cors
-            services.AddCors();
-
-            // Add framework services.
-            services.AddMvc();
-
-
-            //Todo: ***Using DataAnnotations for validation until Swashbuckle supports FluentValidation***
-            //services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-
-            //.AddJsonOptions(opts =>
-            //{
-            //    opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            //});
-
-
-            services.AddSwaggerGen(c =>
+            services.AddControllersWithViews();
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
             {
-                c.AddSecurityDefinition("BearerAuth", new ApiKeyScheme
-                {
-                    Name = "Authorization",
-                    Description = "Login with your bearer authentication token. e.g. Bearer <auth-token>",
-                    In = "header",
-                    Type = "apiKey"
-                });
-
-                c.SwaggerDoc("v1", new Info { Title = "QuickApp API", Version = "v1" });
+                configuration.RootPath = "ClientApp/dist";
             });
         }
 
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug(LogLevel.Warning);
-            loggerFactory.AddFile(Configuration.GetSection("Logging"));
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
-            //Configure Cors
-            app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-
-
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
-
-
-            app.UseExceptionHandler(builder =>
+            if (!env.IsDevelopment())
             {
-                builder.Run(async context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = MediaTypeNames.ApplicationJson;
+                app.UseSpaStaticFiles();
+            }
 
-                    var error = context.Features.Get<IExceptionHandlerFeature>();
+            app.UseRouting();
 
-                    if (error != null)
-                    {
-                        string errorMsg = JsonConvert.SerializeObject(new { error = error.Error.Message });
-                        await context.Response.WriteAsync(errorMsg).ConfigureAwait(false);
-                    }
-                });
-            });
-
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseEndpoints(endpoints =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuickApp API V1");
-            });
-
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }

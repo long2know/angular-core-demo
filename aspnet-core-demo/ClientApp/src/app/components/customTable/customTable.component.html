@@ -1,0 +1,25 @@
+<table class="table-striped table-hover custom-table">
+  <thead>
+    <tr>
+      <th class="th-checkbox" *ngIf="options.config.showSelectAll">
+        <tri-state-checkbox class="toggle-all" [items]="filteredDataObservable"></tri-state-checkbox>
+      </th>
+      <th *ngFor="let column of options.columns" (click)="sortHeaderClick(column.value)" [ngClass]="{ 'sorting': isSorting(column.value), 'sorting_asc': isSortAsc(column.value), 'sorting_desc': isSortDesc(column.value) }">
+        <span [innerHTML]="column.name"></span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of filteredData">
+      <td class="td-checkbox" *ngIf="options.config.showSelectCheckbox">
+        <input type="checkbox" [(ngModel)]="row.isSelected">
+      </td>
+      <td *ngFor="let column of options.columns">
+        <a *ngIf="column.isAnchor" [routerLink]="getRouterLink(row, column)" [innerHTML]="getCellValue(row, column)"></a>
+        <span *ngIf="!column.isDisabledCheckbox && !column.isCheckbox && !column.isAnchor" [innerHTML]="getCellValue(row, column)"></span>
+        <input type="checkbox" *ngIf="column.isDisabledCheckbox || column.isCheckbox" [checked]="getCellValue(row, column)"
+               [disabled]="column.isDisabledCheckbox" (click)="setCellValue(row, column, !getCellValue(row, column), $event)">
+      </td>
+    </tr>
+  </tbody>
+</table>

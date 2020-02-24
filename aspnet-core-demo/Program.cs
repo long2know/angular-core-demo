@@ -1,12 +1,16 @@
 using System;
-using System.IO;
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace aspnet_core_demo
@@ -42,16 +46,17 @@ namespace aspnet_core_demo
 
                 hostBuilder = new WebHostBuilder()
                     .UseConfiguration(config)
-                    .UseKestrel(options => options.Listen(IPAddress.Loopback, rootUrlPort, listenOptions =>
-                    {
-                        listenOptions.UseHttps(new X509Certificate2("testCert.pfx", "testPassword"));
-                    }))
+                    .UseKestrel()
+                    //.UseKestrel(options => options.Listen(IPAddress.Loopback, rootUrlPort, listenOptions =>
+                    //{
+                    //    listenOptions.UseHttps(new X509Certificate2("testCert.pfx", "testPassword"));
+                    //}))
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseStartup<Startup>()
                     .UseIISIntegration();
 
                 // This may or nmay not be necessary
-                //OpenBrowser(rootUrl);
+                OpenBrowser(rootUrl);
             }
             else
             {
@@ -102,22 +107,13 @@ namespace aspnet_core_demo
                 }
             }
         }
-        //public static void Main(string[] args)
-        //{
-        //    var host = BuildWebHost(args);
 
-        //    using (var scope = host.Services.CreateScope())
-        //    {
-        //        var services = scope.ServiceProvider;
-        //    }
-
-        //    host.Run();
-        //}
-
-
-        //public static IWebHost BuildWebHost(string[] args) =>
-        //    WebHost.CreateDefaultBuilder(args)
-        //        .UseStartup<Startup>()
-        //        .Build();
+        // Original method from template
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
