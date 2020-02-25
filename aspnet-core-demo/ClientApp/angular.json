@@ -24,6 +24,7 @@
             "assets": [ "src/assets" ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
               "node_modules/spin.js/spin.css",
               "src/styles.css",
               "src/app/styles-external.css"

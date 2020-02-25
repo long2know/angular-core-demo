@@ -159,6 +159,10 @@ h3 {
 }
 
 body {
+  /*margin: 2em;*/
+}
+
+.app-route {
   margin: 2em;
 }
 
